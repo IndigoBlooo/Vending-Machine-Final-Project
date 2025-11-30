@@ -15,8 +15,9 @@ except:
 
 # ----- Wifi and MQTT Broker Configuration -----
 
-WIFI_SSID = "EbonHawk"
-WIFI_PASS = "Charlie1497!!"
+WIFI_SSID = "******
+"
+WIFI_PASS = "******"
 
 MQTT_BROKER = "test.mosquitto.org:8081"
 MQTT_CLIENT_ID = "esp32-vender-01"
