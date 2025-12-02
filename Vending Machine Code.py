@@ -61,7 +61,7 @@ KEYMAP = [
     ['1','2','3','A'],
     ['4','5','6','B'],
     ['7','8','9','C'],
-    ['*','0','#','D']
+    ['*','0','#','D'],
 ]
 
 #---- Servo Setup ----
@@ -69,9 +69,12 @@ KEYMAP = [
 SERVO_PIN = 27
 servo_pwm = PWM(Pin(SERVO_PIN), freq=50)
 
+SERVO_HOME_ANGLE = 0
+SERVO_VEND_ANGLE = 55
+
 def set_servo_angle(angle):
-    min_duty = 40
-    max_duty = 115
+    min_duty = 25
+    max_duty = 125
     duty = int(min_duty + (angle/180.0)*(max_duty-min_duty))
     try:
         servo_pwm.duty(duty)
@@ -165,9 +168,10 @@ def vend_snack():
         mqtt_client.publish(MQTT_TOPIC_EVENT, b"vend_start")
 
 # ---- Activating the servo motor ----
-
+    set_servo_angle(SERVO_VEND_ANGLE)
     set_servo_angle(45)
     time.sleep(1)
+    set_servo_angle(SERVO_HOME_ANGLE)
     set_servo_angle(0)
 
     snack_count -= 1
@@ -192,6 +196,9 @@ def main():
     display("Booting...", "Please wait")
     time.sleep(1)
 
+    set_servo_angle(SERVO_HOME_ANGLE)
+    time.sleep(0.5)
+
     wlan = wifi_connect()
     client = mqtt_connect()
 
@@ -206,7 +213,7 @@ def main():
             print("Key pressed:", key)
 
 
-            # A = Load Snack
+            # ---- Pressing A loads the snack -----
             if key == "A":
                if snack_count < SLOT_CAPACITY:
                    snack_count += 1
